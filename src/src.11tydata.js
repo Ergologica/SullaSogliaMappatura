@@ -1,9 +1,20 @@
-/* FIX 404 — Forza output "file piatto" per tutte le pagine
-   Senza: src/quartieri.html → _site/quartieri/index.html  (404!)
-   Con:   src/quartieri.html → _site/quartieri.html         (✅)   */
+/* =============================================================
+   FIX 404 — Forza output "file piatto" per tutte le pagine
+   =============================================================
+   Senza questo file, Eleventy crea cartelle:
+     src/quartieri.html → _site/quartieri/index.html
+   Con questo file, crea file piatti:
+     src/quartieri.html → _site/quartieri.html
+
+   Così tutti i link relativi (href="quartieri.html") funzionano.
+   ============================================================= */
 
 module.exports = {
   eleventyComputed: {
-    permalink: (data) => `${data.page.fileSlug}.html`
+    permalink: (data) => {
+      /* index.html ha fileSlug vuoto → serve "index.html" */
+      var slug = data.page.fileSlug || "index";
+      return slug + ".html";
+    }
   }
 };
