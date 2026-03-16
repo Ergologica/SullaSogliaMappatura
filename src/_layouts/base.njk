@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="{{ description }}">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+    {# ============================================================
+       HEADER — Modifica QUI per aggiornare TUTTE le pagine
+       ============================================================ #}
+    <header class="site-header">
+        <div class="header-inner">
+            <a href="index.html" class="logo">
+                <div class="logo-icon">S</div>
+                <div class="logo-text">Mappatura Sulla Soglia</div>
+            </a>
+
+            {# --- Navigazione desktop --- #}
+            <nav class="main-nav">
+                <a href="index.html">Home</a>
+                <a href="quartieri.html">Quartieri</a>
+                <a href="servizi.html">Servizi</a>
+                <a href="scuole.html">Scuole</a>
+                <a href="associazioni.html">Associazioni</a>
+                <a href="guida.html">Nuovo a Sassari?</a>
+                <a href="chisiamo.html">Chi siamo</a>
+            </nav>
+
+            {# --- Hamburger (solo mobile) --- #}
+            <button class="menu-toggle" id="menu-toggle" aria-label="Menu" aria-expanded="false">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none"
+                     stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+        </div>
+
+        {# --- Menu mobile (overlay) --- #}
+        <nav class="mobile-nav" id="mobile-nav">
+            <div class="mobile-nav-title">Sulla Soglia</div>
+            <a href="index.html">Home</a>
+            <a href="quartieri.html">Quartieri</a>
+            <a href="servizi.html">Servizi</a>
+            <a href="scuole.html">Scuole</a>
+            <a href="associazioni.html">Associazioni</a>
+            <a href="guida.html">Nuovo a Sassari?</a>
+            <a href="chisiamo.html">Chi siamo</a>
+            <a href="segnala.html" class="mobile-nav-cta">Segnala un servizio</a>
+        </nav>
+    </header>
+
+
+    {# ============================================================
+       CONTENUTO DELLA PAGINA — iniettato da ogni file in src/
+       ============================================================ #}
+    {{ content | safe }}
+
+
+    {# ============================================================
+       FOOTER — Modifica QUI per aggiornare TUTTE le pagine
+       ============================================================ #}
+    <footer class="site-footer">
+        <div class="footer-inner">
+            <div class="footer-brand">
+                <div class="logo-text">Sulla Soglia</div>
+                <p>Progetto di mappatura territoriale autonoma che valorizza il lavoro di ricerca sul campo e l'accessibilità ai servizi della comunità.</p>
+            </div>
+
+            <div class="footer-links">
+                <h4>Esplora</h4>
+                <a href="quartieri.html">Quartieri</a>
+                <a href="servizi.html">Servizi</a>
+                <a href="scuole.html">Scuole</a>
+                <a href="guida.html">Nuovo a Sassari?</a>
+                <a href="segnala.html">Segnala</a>
+            </div>
+
+            <div class="footer-links">
+                <h4>Quartieri</h4>
+                <a href="centrostorico.html">Centro Storico</a>
+                <a href="monte.html">Monte Rosello</a>
+                <a href="cuore.html">Sacro Cuore</a>
+                <a href="orsola.html">Sant'Orsola</a>
+                <a href="latte.html">Latte Dolce</a>
+                <a href="pisa.html">S. Maria di Pisa</a>
+                <a href="carbonazzi.html">Carbonazzi</a>
+                <a href="lunasole.html">Luna e Sole</a>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p style="margin-bottom:8px">&copy; 2025 Sulla Soglia</p>
+            <p style="font-size:0.85em;opacity:0.8;margin:0">
+                I dati presenti in questo sito sono stati raccolti da fonti pubbliche accessibili,
+                verifiche dirette e ricerche autonome. Le informazioni vengono aggiornate periodicamente,
+                ma potrebbero non essere sempre complete o aggiornate. Per segnalazioni o correzioni:
+                <a href="segnala.html" style="color:inherit;text-decoration:underline">modulo segnalazioni</a>.
+            </p>
+        </div>
+    </footer>
+
+    {# ============================================================
+       SCRIPTS — main.js + fonte dati unica + ricerca
+       ============================================================ #}
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/sitedata.js"></script>
+    <script src="assets/js/search.js"></script>
+
+</body>
+</html>

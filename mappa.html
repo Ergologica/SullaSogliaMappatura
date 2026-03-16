@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sulla Soglia — Mappa di Sassari</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Source Sans 3', 'Segoe UI', sans-serif; }
+        #map { width: 100%; height: 100vh; }
+
+        /* --- Titolo sovrapposto --- */
+        .map-title {
+            position: absolute;
+            top: 12px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 10px 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            text-align: center;
+            pointer-events: none;
+            max-width: 90%;
+        }
+        .map-title h1 {
+            font-family: 'DM Serif Display', Georgia, serif;
+            font-size: 1.1rem;
+            font-weight: 400;
+            color: #2C2C2C;
+            margin-bottom: 2px;
+        }
+        .map-title p {
+            font-size: 0.7rem;
+            color: #888;
+            letter-spacing: 0.03em;
+        }
+
+        /* --- Legenda / filtri --- */
+        .legend {
+            position: absolute;
+            bottom: 24px;
+            left: 12px;
+            z-index: 1000;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 12px 16px;
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+            font-size: 0.82rem;
+            max-width: 260px;
+            max-height: calc(100vh - 120px);
+            overflow-y: auto;
+        }
+        .legend h3 {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #888;
+            margin-bottom: 8px;
+        }
+        .legend label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 4px 0;
+            cursor: pointer;
+            color: #333;
+            user-select: none;
+        }
+        .legend label:hover { color: #B8513A; }
+        .legend input[type="checkbox"] {
+            accent-color: #B8513A;
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+        .legend .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+        .legend .count {
+            margin-left: auto;
+            color: #aaa;
+            font-size: 0.75rem;
+        }
+
+        /* --- Popup ricchi --- */
+        .leaflet-popup-content-wrapper {
+            border-radius: 10px;
+            font-family: 'Source Sans 3', sans-serif;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        }
+        .leaflet-popup-content {
+            font-size: 0.88rem;
+            line-height: 1.5;
+            margin: 12px 16px;
+            min-width: 200px;
+            max-width: 280px;
+        }
+        .popup-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #2C2C2C;
+            margin-bottom: 2px;
+        }
+        .popup-cat {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 8px;
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 50px;
+        }
+        .popup-row {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin-bottom: 4px;
+            font-size: 0.84rem;
+            color: #555;
+        }
+        .popup-row .pi {
+            flex-shrink: 0;
+            font-size: 0.78rem;
+            width: 16px;
+            text-align: center;
+        }
+        .popup-row a {
+            color: #B8513A;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .popup-row a:hover { text-decoration: underline; }
+        .popup-desc {
+            font-size: 0.82rem;
+            color: #777;
+            margin-top: 6px;
+            font-style: italic;
+        }
+        .popup-link {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 6px 16px;
+            background: #B8513A;
+            color: white !important;
+            font-size: 0.8rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none !important;
+            transition: background 0.2s;
+        }
+        .popup-link:hover { background: #8C3D2B; }
+
+        /* --- Responsive --- */
+        @media (max-width: 600px) {
+            .map-title { padding: 8px 14px; }
+            .map-title h1 { font-size: 0.9rem; }
+            .legend { bottom: 10px; left: 8px; padding: 10px 12px; font-size: 0.78rem; max-width: 220px; }
+            .leaflet-popup-content { min-width: 180px; max-width: 250px; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="map"></div>
+
+<div class="map-title">
+    <h1>Sulla Soglia</h1>
+    <p>Mappa della città di Sassari — Educativa di Strada e Coop. Soc. EduPè</p>
+</div>
+
+<div class="legend" id="legend">
+    <h3>Filtra per categoria</h3>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+
+<!-- ★ FONTE DATI UNICA — modifica solo sitedata.js per aggiornare tutto -->
+<script src="assets/js/sitedata.js"></script>
+
+<script>
+(function() {
+    /* ==================================================
+       INIZIALIZZAZIONE MAPPA
+       ================================================== */
+    var map = L.map('map', {
+        center: [40.7259, 8.5568],
+        zoom: 14,
+        zoomControl: true
+    });
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/">CARTO</a>',
+        subdomains: 'abcd',
+        maxZoom: 19
+    }).addTo(map);
+
+    /* ==================================================
+       CARICA CATEGORIE DA SITEDATA.JS
+       getMapCategories() filtra solo quelle con coordinate
+       ================================================== */
+    var categories = getMapCategories();
+    var layerGroups = {};
+    var legend = document.getElementById('legend');
+    var totalPoints = 0;
+
+    Object.keys(categories).forEach(function(catKey) {
+        var cat = categories[catKey];
+        var markers = [];
+
+        cat.items.forEach(function(pt) {
+            /* --- Marker colorato --- */
+            var markerIcon = L.divIcon({
+                className: 'custom-marker',
+                html: '<div style="width:12px;height:12px;border-radius:50%;background:' + cat.color + ';border:2px solid white;box-shadow:0 1px 4px rgba(0,0,0,0.3);"></div>',
+                iconSize: [12, 12],
+                iconAnchor: [6, 6]
+            });
+
+            /* --- Popup HTML ricco --- */
+            var h = '';
+
+            /* Nome + categoria */
+            h += '<div class="popup-name">' + cat.icon + ' ' + esc(pt.name) + '</div>';
+            h += '<div class="popup-cat" style="background:' + cat.color + '15;color:' + cat.color + '">' + esc(cat.label) + '</div>';
+
+            /* Indirizzo */
+            if (pt.addr) {
+                h += '<div class="popup-row"><span class="pi">📍</span><span>' + esc(pt.addr) + '</span></div>';
+            }
+
+            /* Telefono — link tel: per chiamata con un tap su mobile */
+            if (pt.phone) {
+                var cleanPhone = pt.phone.split('/')[0].split('—')[0].replace(/[^0-9+]/g, '');
+                h += '<div class="popup-row"><span class="pi">📞</span><a href="tel:' + cleanPhone + '">' + esc(pt.phone) + '</a></div>';
+            }
+
+            /* Orari */
+            if (pt.hours) {
+                h += '<div class="popup-row"><span class="pi">🕐</span><span>' + esc(pt.hours) + '</span></div>';
+            }
+
+            /* Descrizione breve */
+            if (pt.desc) {
+                h += '<div class="popup-desc">' + esc(pt.desc) + '</div>';
+            }
+
+            /* ★ LINK ALLA PAGINA DI DETTAGLIO */
+            if (pt.page) {
+                h += '<a class="popup-link" href="' + pt.page + '">Vedi dettagli →</a>';
+            }
+
+            var marker = L.marker([pt.lat, pt.lng], { icon: markerIcon })
+                .bindPopup(h, { maxWidth: 280 });
+            markers.push(marker);
+        });
+
+        /* Crea layer group e aggiungilo alla mappa */
+        var group = L.layerGroup(markers).addTo(map);
+        layerGroups[catKey] = group;
+        totalPoints += cat.items.length;
+
+        /* Voce nella legenda con checkbox */
+        var label = document.createElement('label');
+        label.innerHTML =
+            '<input type="checkbox" checked data-layer="' + catKey + '">' +
+            '<span class="dot" style="background:' + cat.color + '"></span>' +
+            esc(cat.label) +
+            '<span class="count">' + cat.items.length + '</span>';
+        legend.appendChild(label);
+    });
+
+    /* --- Toggle filtri --- */
+    legend.addEventListener('change', function(e) {
+        if (e.target.tagName === 'INPUT') {
+            var key = e.target.getAttribute('data-layer');
+            if (e.target.checked) {
+                map.addLayer(layerGroups[key]);
+            } else {
+                map.removeLayer(layerGroups[key]);
+            }
+        }
+    });
+
+    /* Aggiorna conteggio nel titolo */
+    var subtitle = document.querySelector('.map-title p');
+    if (subtitle) {
+        subtitle.textContent = totalPoints + ' punti di interesse — Clicca un punto per info e dettagli';
+    }
+
+    /* ==================================================
+       UTILITY: Escape HTML per prevenire XSS nei dati
+       ================================================== */
+    function esc(str) {
+        if (!str) return '';
+        var d = document.createElement('div');
+        d.appendChild(document.createTextNode(str));
+        return d.innerHTML;
+    }
+})();
+</script>
+</body>
+</html>
