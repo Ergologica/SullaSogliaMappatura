@@ -2021,6 +2021,26 @@ a:focus-visible {
     background: rgba(192, 68, 40, 0.04);
 }
 
+.place-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    padding: 1px 8px;
+    border-radius: 50px;
+    background: rgba(192, 68, 40, 0.08);
+    color: var(--color-primary);
+    margin-left: 2px;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+}
+
+.place-category {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin: 1.2rem 0 0.3rem 0;
+    color: var(--color-text);
+}
+.place-category:first-child { margin-top: 0; }
+
 
 /* ======================================
    SCROLL REVEAL ANIMATION (P5)
