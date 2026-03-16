@@ -7,7 +7,7 @@ module.exports = function(eleventyConfig) {
     dir: {
       input: "src",
       output: "_site",
-      layouts: "_layouts"
+      layouts: "_includes"
     },
     htmlTemplateEngine: "njk"
   };
