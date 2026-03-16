@@ -80,7 +80,7 @@ function initSearch() {
 
   /* --- Chiudi risultati cliccando fuori --- */
   document.addEventListener("click", function(e) {
-    if (!e.target.closest(".search-bar")) {
+    if (!e.target.closest(".global-search-bar")) {
       results.classList.remove("active");
     }
   });

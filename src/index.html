@@ -1,7 +1,7 @@
 ---
 layout: base.njk
 title: "Sulla Soglia — Sassari"
-description: "Mappatura completa di Sassari: 117 punti di interesse verificati da fonti pubbliche. Servizi, scuole, associazioni e opportunità in 8 quartieri. Strumento gratuito per cittadini e nuovi residenti."
+description: "Mappatura completa di Sassari: oltre 140 punti di interesse verificati da fonti pubbliche. Servizi, scuole, associazioni e opportunità in 8 quartieri. Strumento gratuito per cittadini e nuovi residenti."
 ---
 
     {# ============================================================
@@ -13,12 +13,12 @@ description: "Mappatura completa di Sassari: 117 punti di interesse verificati d
        ============================================================ #}
     <section class="map-hero">
         <iframe src="mappa.html"
-                title="Mappa interattiva di Sassari — 117 punti di interesse"
+                title="Mappa interattiva di Sassari — punti di interesse verificati"
                 loading="lazy"
                 allow="geolocation"></iframe>
         <div class="map-hero-overlay">
             <h1>Sassari, mappata</h1>
-            <p>117 servizi verificati in 8 quartieri</p>
+            <p><span id="poi-count-hero">Oltre 140</span> servizi verificati in 8 quartieri</p>
             <div class="map-actions">
                 <a href="mappa.html" target="_blank" class="btn-map-full">&#x26F6; Schermo intero</a>
                 <a href="quartieri.html" class="btn-map-info">Esplora i quartieri</a>
@@ -29,7 +29,7 @@ description: "Mappatura completa di Sassari: 117 punti di interesse verificati d
     {# --- Strip con statistiche chiave --- #}
     <div class="stat-strip">
         <div class="stat-item">
-            <div class="stat-number">117</div>
+            <div class="stat-number" id="poi-count-stat">—</div>
             <div class="stat-label">Punti verificati</div>
         </div>
         <div class="stat-item">
@@ -169,3 +169,18 @@ description: "Mappatura completa di Sassari: 117 punti di interesse verificati d
             <div class="text-center mt-3"><a href="quartieri.html" class="btn btn-outline">Vedi tutti i quartieri</a></div>
         </div>
     </section>
+
+    {# --- Conteggio POI dinamico da sitedata.js --- #}
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof SITE_DATA === 'undefined') return;
+      var count = 0;
+      for (var cat in SITE_DATA) {
+        if (cat !== 'pagine') count += SITE_DATA[cat].items.length;
+      }
+      var el1 = document.getElementById('poi-count-stat');
+      var el2 = document.getElementById('poi-count-hero');
+      if (el1) el1.textContent = count;
+      if (el2) el2.textContent = count;
+    });
+    </script>

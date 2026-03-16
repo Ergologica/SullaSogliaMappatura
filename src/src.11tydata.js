@@ -10,6 +10,7 @@
    ============================================================= */
 
 module.exports = {
+  siteUrl: "https://ergologica.github.io/SullaSogliaMappatura",
   eleventyComputed: {
     permalink: (data) => {
       /* index.html ha fileSlug vuoto → serve "index.html" */

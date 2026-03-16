@@ -10,7 +10,8 @@
     <meta property="og:title" content="{{ title }}">
     <meta property="og:description" content="{{ description }}">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="assets/images/duomo.jpg">
+    <meta property="og:image" content="{{ siteUrl }}/assets/images/duomo.jpg">
+    <meta property="og:url" content="{{ siteUrl }}{{ page.url }}">
 
     {# --- Font: link preconnect (NON @import) per evitare render-blocking --- #}
     <link rel="preconnect" href="https://fonts.googleapis.com">
