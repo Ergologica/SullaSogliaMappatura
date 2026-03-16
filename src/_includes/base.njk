@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="{{ description }}">
     <title>{{ title }}</title>
+
+    {# --- Open Graph per condivisione social/WhatsApp --- #}
+    <meta property="og:title" content="{{ title }}">
+    <meta property="og:description" content="{{ description }}">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="assets/images/duomo.jpg">
+
+    {# --- Font: link preconnect (NON @import) per evitare render-blocking --- #}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Source+Sans+3:wght@300;400;500;600&display=swap">
+
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body>
@@ -54,6 +66,23 @@
             <a href="segnala.html" class="mobile-nav-cta">Segnala un servizio</a>
         </nav>
     </header>
+
+    {# ============================================================
+       BARRA RICERCA GLOBALE — visibile su TUTTE le pagine
+       Legge i dati da sitedata.js, cerca in tempo reale.
+       Per aggiungere un servizio, modifica SOLO sitedata.js.
+       ============================================================ #}
+    <div class="global-search-bar" id="global-search-bar">
+        <div class="global-search-inner">
+            <span class="search-icon" aria-hidden="true">&#128269;</span>
+            <input type="text"
+                   id="global-search"
+                   placeholder="Cerca servizi, farmacie, scuole, quartieri..."
+                   autocomplete="off"
+                   aria-label="Cerca nel sito">
+            <div class="search-results" id="search-results"></div>
+        </div>
+    </div>
 
 
     {# ============================================================
@@ -106,11 +135,12 @@
     </footer>
 
     {# ============================================================
-       SCRIPTS — main.js + fonte dati unica + ricerca
+       SCRIPTS — defer per non bloccare il rendering
+       Nota: sitedata.js PRIMA di search.js (dipendenza)
        ============================================================ #}
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/sitedata.js"></script>
-    <script src="assets/js/search.js"></script>
+    <script defer src="assets/js/sitedata.js"></script>
+    <script defer src="assets/js/main.js"></script>
+    <script defer src="assets/js/search.js"></script>
 
 </body>
 </html>
